@@ -24,26 +24,31 @@ int NumberOfIterationOutOf1000(_C_float_complex a, _C_float_complex c) {
 	return i;
 }
 
-void MapSet(int** map, int screenHeight, Vector2 center, float zoom, Vector2 target) {
-	for (int x = 0; x < screenHeight * 3 / 2; ++x) {
-		for (int y = 0; y < screenHeight; ++y) {
-			_C_float_complex a, c;
-			a._Val[0] = ((((float)x + (target.x - screenHeight * 3 / 4)) * 2 / screenHeight) - center.x) / zoom; a._Val[1] = ((((float)y + (target.y - screenHeight / 2)) * 2 / screenHeight)  - center.y) / zoom;
-			c._Val[0] = a._Val[0]; c._Val[1] = a._Val[1];
-			map[x][y] = NumberOfIterationOutOf1000(a, c);
-		}
-	}
-}
-
-void DrawSet(int** map, int screenHeight) {
-	for (int x = 0; x < screenHeight * 3 / 2; ++x) {
+void DrawSet(int** map, int screenHeight, int screenWidth) {
+	for (int x = 0; x < screenWidth; ++x) {
 		for (int y = 0; y < screenHeight; ++y) {
 			if (map[x][y] >= 1000) {
 				DrawPixel(x, y, BLACK);
 			}
 			else {
-				DrawPixel(x, y, WHITE);
+				Color color = { 255, 255, 255, 255 };
+				color.g = 255 - 5 * (map[x][y]); color.r = 255; color.b = 255; color.a = 255;
+				DrawPixel(x, y, color);
 			}
+		}
+	}
+}
+
+
+void MapSet(int** map, int screenHeight, int screenWidth, float zoom, Vector2 leftUp) {
+	for (int x = 0; x < screenWidth; ++x) {
+		for (int y = 0; y < screenHeight; ++y) {
+			_C_float_complex a, c;
+
+			a._Val[0] = ((float)x / zoom + leftUp.x) / (screenWidth / 3) - 2.0f; a._Val[1] = ((float)y / zoom + leftUp.y) / (screenHeight / 2) - 1.0f;
+			c._Val[0] = a._Val[0]; c._Val[1] = a._Val[1];
+
+			map[x][y] = NumberOfIterationOutOf1000(a, c);
 		}
 	}
 }
