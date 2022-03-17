@@ -57,8 +57,6 @@ int main(void)
 		DrawCircleLines(screenWidth / 2, screenHeight / 2, 5, RED);
 		
 		EndDrawing();
-
-		printf_s("%f %f\n\n", leftUp.x, leftUp.y);
 	}
 
 	CloseWindow();
